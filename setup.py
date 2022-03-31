@@ -8,11 +8,11 @@ with open("requirements.txt") as f:
 
 
 setup(
-    name="tab2grid",
+    name="griddify",
     version="0.0.1",
     author="Miquel Duran-Frigola",
     author_email="miquel@ersilia.io",
-    url="https://github.com/ersilia-os/tab2grid",
+    url="https://github.com/ersilia-os/griddify",
     description="Griddify high-dimensional tabular data for easy visualization and deep learning",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -28,6 +28,6 @@ setup(
         "Topic :: Scientific/Engineering :: Artificial Intelligence",
     ],
     keywords="data-visualization",
-    project_urls={"Source Code": "https://github.com/ersilia-os/tab2grid"},
+    project_urls={"Source Code": "https://github.com/ersilia-os/griddify"},
     include_package_data=True,
 )
