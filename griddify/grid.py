@@ -1,6 +1,7 @@
 import numpy as np
-from scipy.spatial.distance import cdist
 import lap
+from scipy.spatial.distance import cdist
+from sklearn.neighbors import NearestNeighbors
 from sklearn.cluster import KMeans
 
 
@@ -34,47 +35,35 @@ class Cloud2Grid(object):
     def _downsample_with_clustering(self, X):
         self._clusters = KMeans(n_clusters=self._side**2)
         self._clusters.fit(X)
-        
+        centroids = self._clusters.cluster_centers_
+        return centroids
+
+    def _griddify(self, X):
+        xv, yv = np.meshgrid(np.linspace(0, 1, self._side), np.linspace(0, 1, self._side))
+        self.grid = np.dstack((xv, yv)).reshape(-1, 2)
+        cost = cdist(self.grid, X, 'sqeuclidean')
+        cost = cost * (1000000 / cost.max())
+        cost = cost.astype(int)
+        min_cost, row_assigns, col_assigns = lap.lapjv(cost)
+        self._grid_jv = self.grid[col_assigns]
+        self._min_cost = min_cost
+        self._row_assigns = row_assigns
+        self._col_assigns = col_assigns
 
     def fit(self, X):
         assert self._is_cloud(X)
         self._side = self._find_side(X)
         self._do_cluster = self._needs_downsampling(X)
-        
-
-
-
-        self.side = np.min([self._max_side, np.ceil(np.sqrt(X_2d.shape[0]))])
-        xv, yv = np.meshgrid(np.linspace(0, 1, self.side), np.linspace(0, 1, self.side))
-        self.grid = np.dstack((xv, yv)).reshape(-1, 2)
-        cost = cdist(self.grid, X_2d, 'sqeuclidean')
-        cost = cost * (1000000 / cost.max())
-        cost = cost.astype(int)
-        min_cost, row_assigns, col_assigns = lap.lapjv(cost)
-        grid_jv = self.grid[col_assigns]
-        self._min_cost = min_cost
-        self._row_assigns = row_assigns
-        self._col_assigns = col_assigns
-        self.grid_jv = grid_jv
+        if self._do_cluster:
+            X = self._downsample_with_clustering(X)
+        self._griddify(X)
+        self.nearest_neighbors = NearestNeighbors(n_neighbors=1)
+        self.nearest_neighbors.fit(X)
 
     def transform(self, X):
         assert self._is_cloud(X)
-
-    def save(self):
-        pass
-
-    def load(self):
-        pass
-
-
-
-class Tabular2Grid(object):
-
-    def __init__(self, shape, metric="cosine", reducer="umap"):
-        pass
-
-    def fit(self, X):
-        pass
-
-    def transform(self, X):
-        pass
+        idxs, dists = self.nearest_neighbors(X)
+        X_grid = np.zeros(self.X.shape[0], 2)
+        for i, idx in enumerate(idxs[:,0]):
+            X_grid[i] = self._grid_jv[idx]
+        return X_grid
