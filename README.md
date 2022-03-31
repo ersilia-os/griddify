@@ -1,18 +1,18 @@
-# Tab2Grid
+# Griddify
 Griddify high-dimensional tabular data for easy visualization and deep learning
 
 ## Installation
 
 ```
-git clone https://github.com/ersilia-os/tab2grid.git
-cd tab2grid
+git clone https://github.com/ersilia-os/griddify.git
+cd griddify
 pip install -e .
 ```
 
 ### Usage
 
 ```python
-from tab2grid import Cloud2Grid
+from griddify import Cloud2Grid
 
 g = Cloud2Grid()
 g.fit(Xc)
