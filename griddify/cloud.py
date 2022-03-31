@@ -1,16 +1,25 @@
-class Tabular2Cloud(object):
+from umap import UMAP
+
+
+class Tabular2Distances(object):
+    
+    def __init__(self, metric="cosine"):
+        pass
+
+    def fit(self, X):
+        pass
+
+    def 
+
+
+
+class Distance2Cloud(object):
 
     def __init__(self):
         pass
 
-    def fit(self):
+    def fit(self, X):
         pass
 
     def transform(self):
-        pass
-
-    def save(self):
-        pass
-
-    def load(self):
         pass

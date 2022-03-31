@@ -1,2 +1,3 @@
+umap-learn
 scikit-learn
 lap
