@@ -5,6 +5,9 @@ from sklearn.neighbors import NearestNeighbors
 from sklearn.cluster import KMeans
 
 
+GRIDDIFY_METRIC = "sqeuclidean"
+
+
 class Cloud2Grid(object):
 
     def __init__(self, max_side=128):
@@ -41,7 +44,7 @@ class Cloud2Grid(object):
     def _griddify(self, X):
         xv, yv = np.meshgrid(np.linspace(0, 1, self._side), np.linspace(0, 1, self._side))
         self.grid = np.dstack((xv, yv)).reshape(-1, 2)
-        cost = cdist(self.grid, X, 'sqeuclidean')
+        cost = cdist(self.grid, X, GRIDDIFY_METRIC)
         cost = cost * (1000000 / cost.max())
         cost = cost.astype(int)
         min_cost, row_assigns, col_assigns = lap.lapjv(cost)
@@ -62,7 +65,7 @@ class Cloud2Grid(object):
 
     def transform(self, X):
         assert self._is_cloud(X)
-        idxs, dists = self.nearest_neighbors(X)
+        idxs = self.nearest_neighbors.kneighbors(X, return_distance=False)
         X_grid = np.zeros(self.X.shape[0], 2)
         for i, idx in enumerate(idxs[:,0]):
             X_grid[i] = self._grid_jv[idx]
