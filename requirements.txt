@@ -1,3 +1,4 @@
+pandas
 umap-learn
 scikit-learn
 lap

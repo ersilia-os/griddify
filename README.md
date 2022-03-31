@@ -1,5 +1,5 @@
 # Griddify
-Griddify high-dimensional tabular data for easy visualization and deep learning
+Griddify high-dimensional tabular data for easy visualization and image-based deep learning
 
 ## Installation
 
@@ -11,9 +11,18 @@ pip install -e .
 
 ## Step by step
 
-### Create a 2D cloud of your data features
+### Get your multidimensional dataset and preprocess it
 
-First, process your data so that it contains no empty values, it is scaled, etc.
+We will use a dataset of 200 physicochemical descriptors for about 10k compounds. You can get this data with the following command.
+
+```python
+from griddify import datasets
+
+data = datasets.get_compound_descriptors()
+```
+
+It is important that you preprocess your data (impute missing values, normalize, etc.). We provide functionality to do so.
+
 ```python
 from griddify import Preprocessing
 
@@ -22,7 +31,21 @@ pp.fit(data)
 data = pp.transform(data)
 ```
 
-You can now obtain a 2D cloud of your data features. At the moment, UMAP is used.
+### Create a 2D cloud of your data features
+
+Now you must project features on a 2D spaces. There are two options to doing so:
+
+#### Option 1: Transpose data
+
+
+
+#### Option 2: Distance matrix
+
+```python
+from griddify import 
+```
+
+You can now obtain a 2D cloud of your data features. At the moment, [UMAP](https://umap-learn.readthedocs.io/en/latest/) is used.
 ```python
 from griddify import Tabular2Cloud
 
@@ -37,7 +60,6 @@ distances = pdist(data)
 pp.fit(distances)
 Xc = tc.transform(distances)
 ```
-
 
 ### Rearrange the 2D cloud on a grid
 

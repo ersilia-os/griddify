@@ -1,6 +1,5 @@
 from umap import UMAP
 
-
 class Tabular2Distances(object):
     
     def __init__(self, metric="cosine"):
@@ -9,7 +8,8 @@ class Tabular2Distances(object):
     def fit(self, X):
         pass
 
-    def 
+    def transform(self, X):
+        pass
 
 
 

@@ -53,6 +53,11 @@ class Cloud2Grid(object):
         self._row_assigns = row_assigns
         self._col_assigns = col_assigns
 
+    def _grid_coordinates_as_integers(self, X):
+        X = X*self._side
+        X = X.astype(int)
+        return X
+
     def fit(self, X):
         assert self._is_cloud(X)
         self._side = self._find_side(X)
@@ -63,10 +68,13 @@ class Cloud2Grid(object):
         self.nearest_neighbors = NearestNeighbors(n_neighbors=1)
         self.nearest_neighbors.fit(X)
 
-    def transform(self, X):
+    def transform(self, X, as_integers=False):
         assert self._is_cloud(X)
         idxs = self.nearest_neighbors.kneighbors(X, return_distance=False)
-        X_grid = np.zeros(self.X.shape[0], 2)
+        X_grid = np.zeros((X.shape[0], 2))
         for i, idx in enumerate(idxs[:,0]):
             X_grid[i] = self._grid_jv[idx]
-        return X_grid
+        if as_integers:
+            return self._grid_coordinates_as_integers(X_grid)
+        else:
+            return X_grid
