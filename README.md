@@ -9,6 +9,16 @@ cd griddify
 pip install -e .
 ```
 
+## One-step usage
+
+```python
+from griddify import Griddify
+
+gf = Griddify()
+gf.fit(data)
+X = gf.transform(data)
+```
+
 ## Step by step
 
 ### Get your multidimensional dataset and preprocess it
@@ -91,16 +101,4 @@ Explore one sample:
 from griddify.plots import grid_plot
 
 grid_plot(X[0])
-```
-
-
-## Pipeline
-
-```python
-from griddify import Griddify
-
-gf = Griddify()
-gf.fit(data)
-grids = gf.transform(data)
-
 ```
