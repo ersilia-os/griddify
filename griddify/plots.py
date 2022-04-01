@@ -1,9 +1,12 @@
 from scipy.spatial.distance import euclidean
 import matplotlib as mpl
 from matplotlib import cm
+import matplotlib.pyplot as plt
 
 
-def arrows_plot(X_cloud, X_grid, ax, capping_distance=0.5):
+def arrows_plot(X_cloud, X_grid, ax=None, capping_distance=0.5):
+    if ax is None:
+        fig, ax = plt.subplots(1,1, figsize=(5,5))
     cmap = cm.get_cmap("viridis")
     dists = []
     for start, end in zip(X_cloud, X_grid):
@@ -19,7 +22,9 @@ def arrows_plot(X_cloud, X_grid, ax, capping_distance=0.5):
     return ax
 
 
-def cloud_plot(X, ax):
+def cloud_plot(X, ax=None):
+    if ax is None:
+        fig, ax = plt.subplots(1,1, figsize=(5,5))
     ax.scatter(X[:,0], X[:,1])
     return ax
 

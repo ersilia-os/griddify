@@ -95,10 +95,14 @@ fg.fit(data)
 X = fg.transform(data)
 ```
 
-Explore one sample:
+Explore one sample.
 
 ```python
 from griddify.plots import grid_plot
 
 grid_plot(X[0])
 ```
+
+## Learn more
+
+The [Ersilia Open Source Initiative](https://ersilia.io) is on a mission to strenghten research capacity in low income countries. Please reach out to us if you want to contribute: [hello@ersilia.io]()
