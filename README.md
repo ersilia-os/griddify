@@ -43,24 +43,25 @@ data = pp.transform(data)
 
 ### Create a 2D cloud of your data features
 
-```python
-from griddify import Transposer
+Start by calculating correlations between features.
 
-tp = Transposer()
-tp.fit(data)
-Xf = tp.transform(data)
+```python
+from griddify import FeatureDistances
+
+fd = FeatureDistances(metric="cosine").calculate(data)
 ```
 
 You can now obtain a 2D cloud of your data features. By default, [UMAP](https://umap-learn.readthedocs.io/en/latest/) is used.
+
 ```python
 from griddify import Tabular2Cloud
 
 tc = Tabular2Cloud()
-tc.fit(Xf)
-Xc = tc.transform(Xf)
+tc.fit(fd)
+Xc = tc.transform(fd)
 ```
 
-It is always good to inspect your projection. The resulting cloud should contain as many points as features in your dataset.
+It is always good to inspect the resulting projection. The cloud contains as many points as features in your dataset.
 
 ```python
 from griddify.plots import cloud_plot
@@ -69,6 +70,8 @@ cloud_plot(Xc)
 ```
 
 ### Rearrange the 2D cloud on a grid
+
+Distribute points in the cloud to a grid using a linear assignment algorithm.
 
 ```python
 from griddify import Cloud2Grid
@@ -87,10 +90,12 @@ arrows_plot(Xc, Xg)
 
 ### Rearrange your flat data points into grids
 
+Let's go back to the original tabular data. We want to transform the input data, where each data sample is represented by an one-dimensional array, into an output data where each sample is represented by an image (i.e. a two-dimensional grid). Please be sure to use normalized data.
+
 ```python
 from griddify import Flat2Grid
 
-fg = Flat2Grid()
+fg = Flat2Grid(cloud2grid=cg)
 fg.fit(data)
 X = fg.transform(data)
 ```
