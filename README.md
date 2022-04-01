@@ -33,32 +33,29 @@ data = pp.transform(data)
 
 ### Create a 2D cloud of your data features
 
-Now you must project features on a 2D spaces. There are two options to doing so:
-
-#### Option 1: Transpose data
-
-
-
-#### Option 2: Distance matrix
-
 ```python
-from griddify import 
+from griddify import Transposer
+
+tp = Transposer()
+tp.fit(data)
+Xf = tp.transform(data)
 ```
 
-You can now obtain a 2D cloud of your data features. At the moment, [UMAP](https://umap-learn.readthedocs.io/en/latest/) is used.
+You can now obtain a 2D cloud of your data features. By default, [UMAP](https://umap-learn.readthedocs.io/en/latest/) is used.
 ```python
 from griddify import Tabular2Cloud
 
 tc = Tabular2Cloud()
-tc.fit(data)
-Xc = tc.transform(data)
+tc.fit(Xf)
+Xc = tc.transform(Xf)
 ```
 
-If you want, you can directly pass a distance matrix as tabular data.
+It is always good to inspect your projection. The resulting cloud should contain as many points as features in your dataset.
+
 ```python
-distances = pdist(data)
-pp.fit(distances)
-Xc = tc.transform(distances)
+from griddify.plots import cloud_plot
+
+cloud_plot(Xc)
 ```
 
 ### Rearrange the 2D cloud on a grid
@@ -66,17 +63,36 @@ Xc = tc.transform(distances)
 ```python
 from griddify import Cloud2Grid
 
-g = Cloud2Grid()
-g.fit(Xc)
-Xg = g.transform(Xc)
+cg = Cloud2Grid()
+cg.fit(Xc)
+Xg = cg.transform(Xc)
 ```
 
-### Rearrange your samples into grids
+You can check the rearrangement with an arrows plot.
+```python
+from griddify.plots import arrows_plot
+
+arrows_plot(Xc, Xg)
+```
+
+### Rearrange your flat data points into grids
 
 ```python
-from griddify import 
+from griddify import Flat2Grid
 
+fg = Flat2Grid()
+fg.fit(data)
+X = fg.transform(data)
 ```
+
+Explore one sample:
+
+```python
+from griddify.plots import grid_plot
+
+grid_plot(X[0])
+```
+
 
 ## Pipeline
 
