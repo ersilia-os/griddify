@@ -1,5 +1,5 @@
 # Griddify
-Redistribute tabular data into a grid for easy visualization and image-based deep learning
+Redistribute tabular data into a grid for easy visualization and image-based deep learning. This library is greatly inspired by the excellent [MolMap](https://github.com/shenwanxiang/bidd-molmap) library.
 
 ## Installation
 

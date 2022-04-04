@@ -17,11 +17,12 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     license="MIT",
-    python_requires=">=3.7",
+    python_requires=">=3.6",
     install_requires=install_requires,
     packages=find_packages(exclude=("utilities")),
     entry_points={},
     classifiers=[
+        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
