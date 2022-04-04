@@ -1,9 +1,14 @@
+import warnings
+warnings.filterwarnings('ignore')
+
 import numpy as np
 from umap import UMAP
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
 
 ZSCORE_CLIP = (-5, 5)
+
+RANDOM_SEED = 42
 
 
 class Tabular2Cloud(object):
@@ -27,9 +32,9 @@ class Tabular2Cloud(object):
     def fit(self, X):
         X = np.array(X)
         if self._is_distance_matrix(X):
-            self.reducer = UMAP(metric="precomputed")
+            self.reducer = UMAP(metric="precomputed", random_state=RANDOM_SEED)
         else:
-            self.reducer = UMAP()
+            self.reducer = UMAP(random_state=RANDOM_SEED)
         self.reducer.fit(X)
         Xt = self.reducer.transform(X)
         self.standard_scaler.fit(Xt)

@@ -2,6 +2,7 @@ from scipy.spatial.distance import euclidean
 import matplotlib as mpl
 from matplotlib import cm
 import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle
 
 
 def arrows_plot(X_cloud, X_grid, ax=None, capping_distance=0.5):
@@ -37,7 +38,7 @@ def cloud_plot(X, ax=None):
     return ax
 
 
-def grid_plot(X, ax=None):
+def grid_plot(X, ax=None, s=300):
     if ax is None:
         fig, ax = plt.subplots(1, 1, figsize=(5, 5))
     cmap = cm.get_cmap("Spectral")
@@ -51,5 +52,9 @@ def grid_plot(X, ax=None):
             y += [j]
             z += [X[i, j]]
     colors = [cmap(norm(z_)) for z_ in z]
-    ax.scatter(x, y, color=colors, s=300, edgecolors="black", lw=0.1)  # TODO
+    for x_, y_, c_ in zip(x,y,colors):
+        rect = Rectangle(xy=(x_,y_), width=1, height=1, facecolor=c_)
+        ax.add_patch(rect)
+    ax.set_xlim(0, X.shape[0])
+    ax.set_ylim(0, X.shape[1])
     return ax
