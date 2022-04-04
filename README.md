@@ -92,7 +92,6 @@ Let's go back to the original tabular data. We want to transform the input data,
 from griddify import Flat2Grid
 
 fg = Flat2Grid(mappings, side)
-fg.fit(data)
 Xi = fg.transform(data)
 ```
 
