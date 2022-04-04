@@ -103,6 +103,16 @@ from griddify.plots import grid_plot
 grid_plot(Xi[0])
 ```
 
+## One-liner
+
+```python
+from griddify import Griddify
+
+gf = Griddify()
+gf.fit(data)
+Xi = gf.transform(data)
+```
+
 ## Learn more
 
 The [Ersilia Open Source Initiative](https://ersilia.io) is on a mission to strenghten research capacity in low income countries. Please reach out to us if you want to contribute: [hello@ersilia.io]()
