@@ -10,6 +10,23 @@ class FeatureDistances(object):
         self.max_n = max_n
 
     def calculate(self, data):
-        D = squareform(pdist(np.array(data).T[: self.max_n], metric=self.metric))
+        data = pd.DataFrame(data)
+        D = squareform(pdist(np.array(data).T[:,:self.max_n], metric=self.metric))
         D[np.isnan(D)] = np.nanmax(D)
         return pd.DataFrame(D, columns=list(data.columns))
+
+""""
+
+class FeatureMutualInformation(object):
+    def __init__(self, max_n=100000):
+        self.max_n = max_n
+
+    def calculate(self, data):
+        X = np.array(data)[:self.max_n]
+        M = pass
+        for i in range(X.shape[0]-1):
+            for j in range(i+1, X.shape[0]):
+                x = X[:,i]
+                y = X[:,j]
+
+"""
