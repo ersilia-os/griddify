@@ -9,16 +9,6 @@ cd griddify
 pip install -e .
 ```
 
-## One-step usage
-
-```python
-from griddify import Griddify
-
-gf = Griddify()
-gf.fit(data)
-X = gf.transform(data)
-```
-
 ## Step by step
 
 ### Get your multidimensional dataset and preprocess it
@@ -88,6 +78,12 @@ from griddify.plots import arrows_plot
 arrows_plot(Xc, Xg)
 ```
 
+To continue with the next steps, it is actually more convenient to get mappings as integers.
+
+```python
+mappings, side = cg.get_mappings(Xc)
+```
+
 ### Rearrange your flat data points into grids
 
 Let's go back to the original tabular data. We want to transform the input data, where each data sample is represented by an one-dimensional array, into an output data where each sample is represented by an image (i.e. a two-dimensional grid). Please be sure to use normalized data.
@@ -95,9 +91,9 @@ Let's go back to the original tabular data. We want to transform the input data,
 ```python
 from griddify import Flat2Grid
 
-fg = Flat2Grid(cloud2grid=cg)
+fg = Flat2Grid(mappings, side)
 fg.fit(data)
-X = fg.transform(data)
+Xi = fg.transform(data)
 ```
 
 Explore one sample.
@@ -105,7 +101,7 @@ Explore one sample.
 ```python
 from griddify.plots import grid_plot
 
-grid_plot(X[0])
+grid_plot(Xi[0])
 ```
 
 ## Learn more

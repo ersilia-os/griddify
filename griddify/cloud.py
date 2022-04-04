@@ -7,7 +7,6 @@ ZSCORE_CLIP = (-5, 5)
 
 
 class Tabular2Cloud(object):
-
     def __init__(self):
         self.standard_scaler = StandardScaler()
         self.minmax_scaler = MinMaxScaler()
@@ -21,9 +20,9 @@ class Tabular2Cloud(object):
         if X.shape[0] != X.shape[1]:
             return False
         for i in range(X.shape[0]):
-            if X[i,i] != 0:
+            if X[i, i] != 0:
                 return False
-        return np.all(np.abs(X-X.T) < tol)
+        return np.all(np.abs(X - X.T) < tol)
 
     def fit(self, X):
         X = np.array(X)
@@ -35,7 +34,7 @@ class Tabular2Cloud(object):
         Xt = self.reducer.transform(X)
         self.standard_scaler.fit(Xt)
         Xt = self.standard_scaler.transform(Xt)
-        Xt = self._clip(Xt) 
+        Xt = self._clip(Xt)
         self.minmax_scaler.fit(Xt)
 
     def transform(self, X):

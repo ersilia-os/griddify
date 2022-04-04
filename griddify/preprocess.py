@@ -88,7 +88,6 @@ class VarianceFilter(object):
 
 
 class Preprocessing(object):
-
     def __init__(self):
         self.nan_filter = NanFilter()
         self.scaler = Scaler()

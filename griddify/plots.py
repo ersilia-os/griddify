@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 def arrows_plot(X_cloud, X_grid, ax=None, capping_distance=0.5):
     if ax is None:
-        fig, ax = plt.subplots(1,1, figsize=(5,5))
+        fig, ax = plt.subplots(1, 1, figsize=(5, 5))
     cmap = cm.get_cmap("viridis")
     dists = []
     for start, end in zip(X_cloud, X_grid):
@@ -17,14 +17,39 @@ def arrows_plot(X_cloud, X_grid, ax=None, capping_distance=0.5):
     i = 0
     for start, end in zip(X_cloud, X_grid):
         color = colors[i]
-        ax.arrow(start[0], start[1], end[0] - start[0], end[1] - start[1], head_length=0.01, head_width=0.01, color=color)
+        ax.arrow(
+            start[0],
+            start[1],
+            end[0] - start[0],
+            end[1] - start[1],
+            head_length=0.01,
+            head_width=0.01,
+            color=color,
+        )
         i += 1
     return ax
 
 
 def cloud_plot(X, ax=None):
     if ax is None:
-        fig, ax = plt.subplots(1,1, figsize=(5,5))
-    ax.scatter(X[:,0], X[:,1])
+        fig, ax = plt.subplots(1, 1, figsize=(5, 5))
+    ax.scatter(X[:, 0], X[:, 1])  # TODO
     return ax
 
+
+def grid_plot(X, ax=None):
+    if ax is None:
+        fig, ax = plt.subplots(1, 1, figsize=(5, 5))
+    cmap = cm.get_cmap("Spectral")
+    norm = mpl.colors.Normalize(vmin=-2.3, vmax=2.3)  # TODO
+    x = []
+    y = []
+    z = []
+    for i in range(X.shape[0]):
+        for j in range(X.shape[1]):
+            x += [i]
+            y += [j]
+            z += [X[i, j]]
+    colors = [cmap(norm(z_)) for z_ in z]
+    ax.scatter(x, y, color=colors, s=300, edgecolors="black", lw=0.1)  # TODO
+    return ax
