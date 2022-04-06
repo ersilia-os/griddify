@@ -1,38 +1,44 @@
 import numpy as np
-import numpy as np
 import pandas as pd
 from scipy.spatial.distance import squareform
 from scipy.spatial.distance import pdist
-# from tqdm import tqdm
-# from .utils import Mixed_KSG
 
 
 class FeatureDistances(object):
-    def __init__(self, metric="cosine", max_n=10000):
+    def __init__(self, metric="cosine", max_n=10000, max_subsampling_rounds=5):
         self.metric = metric
         self.max_n = max_n
+        self.max_subsampling_rounds = max_subsampling_rounds
+
+    def _transpose(self, data):
+        return np.array(data).T
+
+    def _subsample(self, X):
+        N = X.shape[1]
+        idxs = np.array([i for i in range(N)])
+        visited_idxs = set()
+        round_idxs = []
+        seed = 42
+        for _ in range(self.max_subsampling_rounds):
+            n = min(N, self.max_n)
+            np.random.seed(seed=seed)
+            idxs_ = np.random.choice(idxs, size=n, replace=False)
+            round_idxs += [idxs_]
+            visited_idxs.update(list(idxs_))
+            if len(visited_idxs) == len(idxs):
+                break
+            seed += 1
+        return round_idxs
 
     def calculate(self, data):
         data = pd.DataFrame(data)
-        D = squareform(pdist(np.array(data).T[:,:self.max_n], metric=self.metric))
+        X = self._transpose(data)
+        round_idxs = self._subsample(X)
+        D = np.zeros((X.shape[0], X.shape[0], len(round_idxs)))
+        for k, idxs in enumerate(round_idxs):
+            X_ = X[:,idxs]
+            D_ = squareform(pdist(X_, metric=self.metric))
+            D[:,:,k] = D_
+        D = np.nanmean(D, axis=2) 
         D[np.isnan(D)] = np.nanmax(D)
         return pd.DataFrame(D, columns=list(data.columns))
-
-"""
-class FeatureMutualInformation(object):
-    def __init__(self, max_n=100000):
-        self.max_n = max_n
-
-    def calculate(self, data):
-        data = pd.DataFrame(data)
-        X = np.array(data)[:self.max_n]
-        M = np.zeros((X.shape[1], X.shape[1]))
-        for i in tqdm(range(X.shape[1])):
-            for j in range(i, X.shape[1]):
-                x = X[:,i]
-                y = X[:,j]
-                mi = Mixed_KSG(x,y,k=5)
-                M[i,j]=mi
-                M[j,i]=mi
-        return pd.DataFrame(M, columns=list(data.columns))
-"""

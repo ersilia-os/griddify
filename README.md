@@ -13,7 +13,7 @@ pip install -e .
 
 ### Get a multidimensional dataset and preprocess it
 
-In this example, we will use a dataset of 200 physicochemical [descriptors](https://www.rdkit.org/docs/source/rdkit.Chem.Descriptors.html) calculated about 10k compounds. You can get this data with the following command.
+In this example, we will use a dataset of 200 physicochemical [descriptors](https://www.rdkit.org/docs/source/rdkit.Chem.Descriptors.html) calculated for about 10k compounds. You can get these data with the following command.
 
 ```python
 from griddify import datasets
@@ -61,7 +61,7 @@ cloud_plot(Xc)
 
 ### Rearrange the 2D cloud onto a grid
 
-Distribute points in the cloud to a grid using a [linear assignment](https://github.com/gatagat/lap) algorithm.
+Distribute cloud points on grid using a [linear assignment](https://github.com/gatagat/lap) algorithm.
 
 ```python
 from griddify import Cloud2Grid

@@ -38,10 +38,10 @@ def cloud_plot(X, ax=None):
     return ax
 
 
-def grid_plot(X, ax=None, s=300):
+def grid_plot(X, ax=None, s=300, cmap="Spectral"):
     if ax is None:
         fig, ax = plt.subplots(1, 1, figsize=(5, 5))
-    cmap = cm.get_cmap("Spectral")
+    cmap = cm.get_cmap(cmap)
     norm = mpl.colors.Normalize(vmin=-2.3, vmax=2.3)  # TODO
     x = []
     y = []

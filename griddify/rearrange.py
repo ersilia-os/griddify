@@ -1,5 +1,6 @@
 import numpy as np
 import collections
+from tqdm import tqdm
 
 
 class Flat2Grid(object):
@@ -11,7 +12,7 @@ class Flat2Grid(object):
     def transform(self, X):
         X = np.array(X)
         d = collections.defaultdict(list)
-        for i in range(X.shape[0]):
+        for i in tqdm(range(X.shape[0])):
             x = X[i, :]
             for j, v in enumerate(x):
                 idx_i, idx_j = self._mappings[j]
