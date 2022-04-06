@@ -52,8 +52,8 @@ def grid_plot(X, ax=None, s=300, cmap="Spectral"):
             y += [j]
             z += [X[i, j]]
     colors = [cmap(norm(z_)) for z_ in z]
-    for x_, y_, c_ in zip(x,y,colors):
-        rect = Rectangle(xy=(x_,y_), width=1, height=1, facecolor=c_)
+    for x_, y_, c_ in zip(x, y, colors):
+        rect = Rectangle(xy=(x_, y_), width=1, height=1, facecolor=c_)
         ax.add_patch(rect)
     ax.set_xlim(0, X.shape[0])
     ax.set_ylim(0, X.shape[1])

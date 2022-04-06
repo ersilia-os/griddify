@@ -1,5 +1,6 @@
 import warnings
-warnings.filterwarnings('ignore')
+
+warnings.filterwarnings("ignore")
 
 import numpy as np
 from umap import UMAP

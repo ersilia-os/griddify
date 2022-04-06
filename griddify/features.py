@@ -36,9 +36,9 @@ class FeatureDistances(object):
         round_idxs = self._subsample(X)
         D = np.zeros((X.shape[0], X.shape[0], len(round_idxs)))
         for k, idxs in enumerate(round_idxs):
-            X_ = X[:,idxs]
+            X_ = X[:, idxs]
             D_ = squareform(pdist(X_, metric=self.metric))
-            D[:,:,k] = D_
-        D = np.nanmean(D, axis=2) 
+            D[:, :, k] = D_
+        D = np.nanmean(D, axis=2)
         D[np.isnan(D)] = np.nanmax(D)
         return pd.DataFrame(D, columns=list(data.columns))

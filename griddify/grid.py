@@ -27,7 +27,7 @@ class Cloud2Grid(object):
         return side
 
     def _needs_downsampling(self, X):
-        avail = self._side ** 2
+        avail = self._side**2
         assert avail <= X.shape[0]
         if avail == X.shape[0]:
             return False
@@ -35,7 +35,7 @@ class Cloud2Grid(object):
             return True
 
     def _downsample_with_clustering(self, X):
-        self._clusters = KMeans(n_clusters=self._side ** 2)
+        self._clusters = KMeans(n_clusters=self._side**2)
         self._clusters.fit(X)
         centroids = self._clusters.cluster_centers_
         return centroids

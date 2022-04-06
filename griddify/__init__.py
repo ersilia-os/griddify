@@ -6,7 +6,6 @@ from .rearrange import Flat2Grid
 
 
 class Griddify(object):
-
     def __init__(self, preprocess=True, metric="cosine", max_side=128):
         self._preprocess = preprocess
         self._metric = metric
