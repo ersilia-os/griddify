@@ -1,10 +1,11 @@
 import numpy as np
 import pandas as pd
-from sklearn.preprocessing import RobustScaler
+from sklearn.preprocessing import RobustScaler, MaxAbsScaler
 from sklearn.feature_selection import VarianceThreshold
 
 
 MAX_NA = 0.2
+SPARSE_ZEROS = 0.25
 
 
 class NanFilter(object):
@@ -27,18 +28,28 @@ class NanFilter(object):
 
 
 class Scaler(object):
-    def __init__(self):
+    def __init__(self, is_sparse):
         self._name = "scaler"
         self.abs_limit = 10
         self.skip = False
+        self._is_sparse = is_sparse
 
     def set_skip(self):
         self.skip = True
 
+    def get_dense_scaler(self):
+        return RobustScaler()
+
+    def get_sparse_scaler(self):
+        return MaxAbsScaler()
+
     def fit(self, X):
         if self.skip:
             return
-        self.scaler = RobustScaler()
+        if self._is_sparse:
+            self.scaler = self.get_sparse_scaler()
+        else:
+            self.scaler = self.get_dense_scaler()
         self.scaler.fit(X)
 
     def transform(self, X):
@@ -94,14 +105,24 @@ class Preprocessing(object):
         self.imputer = Imputer()
         self.variance_filter = VarianceFilter()
 
+    def _assess_sparseness(self, X):
+        X = X.ravel()
+        n_zeros = np.sum(X == 0)
+        if n_zeros/len(X) > SPARSE_ZEROS:
+            return True
+        else:
+            return False
+
     def fit(self, data):
         self._columns = list(data.columns)
         X = np.array(data)
+        self._is_sparse = self._assess_sparseness(X)
         self.nan_filter.fit(X)
         X = self.nan_filter.transform(X)
         self._columns = [self._columns[i] for i in self.nan_filter.col_idxs]
         self.imputer.fit(X)
         X = self.imputer.transform(X)
+        self.scaler._is_sparse = self._is_sparse
         self.scaler.fit(X)
         X = self.scaler.transform(X)
         self.variance_filter.fit(X)
