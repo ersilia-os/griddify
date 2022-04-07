@@ -3,7 +3,7 @@ import matplotlib as mpl
 from matplotlib import cm
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
-
+import numpy as np
 
 def arrows_plot(X_cloud, X_grid, ax=None, capping_distance=0.5):
     if ax is None:
