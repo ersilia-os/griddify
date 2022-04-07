@@ -38,11 +38,17 @@ def cloud_plot(X, ax=None):
     return ax
 
 
-def grid_plot(X, ax=None, s=300, cmap="Spectral"):
+def grid_plot(X, ax=None, s=300, cmap="Spectral", vlim=None):
     if ax is None:
         fig, ax = plt.subplots(1, 1, figsize=(5, 5))
     cmap = cm.get_cmap(cmap)
-    norm = mpl.colors.Normalize(vmin=-2.3, vmax=2.3)  # TODO
+    if vlim is None:
+        vmin = np.min(X)
+        vmax = np.max(X)
+    else:
+        vmin = vlim[0]
+        vmax = vlim[1]
+    norm = mpl.colors.Normalize(vmin=vmin, vmax=vmax)
     x = []
     y = []
     z = []
