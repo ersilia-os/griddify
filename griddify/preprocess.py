@@ -7,10 +7,12 @@ from sklearn.feature_selection import VarianceThreshold
 MAX_NA = 0.2
 SPARSE_ZEROS = 0.25
 
+MAX_DATATYPER_N = 10000
+
 
 class NanFilter(object):
     def __init__(self):
-        self._name = "nan_filter"
+        pass
 
     def fit(self, X):
         max_na = int((1 - MAX_NA) * X.shape[0])
@@ -27,42 +29,8 @@ class NanFilter(object):
         return X[:, self.col_idxs]
 
 
-class Scaler(object):
-    def __init__(self, is_sparse):
-        self._name = "scaler"
-        self.abs_limit = 10
-        self.skip = False
-        self._is_sparse = is_sparse
-
-    def set_skip(self):
-        self.skip = True
-
-    def get_dense_scaler(self):
-        return RobustScaler()
-
-    def get_sparse_scaler(self):
-        return MaxAbsScaler()
-
-    def fit(self, X):
-        if self.skip:
-            return
-        if self._is_sparse:
-            self.scaler = self.get_sparse_scaler()
-        else:
-            self.scaler = self.get_dense_scaler()
-        self.scaler.fit(X)
-
-    def transform(self, X):
-        if self.skip:
-            return X
-        X = self.scaler.transform(X)
-        X = np.clip(X, -self.abs_limit, self.abs_limit)
-        return X
-
-
 class Imputer(object):
     def __init__(self):
-        self._name = "imputer"
         self._fallback = 0
 
     def fit(self, X):
@@ -87,7 +55,7 @@ class Imputer(object):
 
 class VarianceFilter(object):
     def __init__(self):
-        self._name = "variance_filter"
+        pass
 
     def fit(self, X):
         self.sel = VarianceThreshold()
@@ -98,33 +66,96 @@ class VarianceFilter(object):
         return self.sel.transform(X)
 
 
-class Preprocessing(object):
-    def __init__(self):
-        self.nan_filter = NanFilter()
-        self.scaler = Scaler()
-        self.imputer = Imputer()
-        self.variance_filter = VarianceFilter()
+# TODO
+class DataTyper(object):
 
-    def _assess_sparseness(self, X):
+    def __init__(self, data):
+        X = np.array(data)[:MAX_DATATYPER_N]
+
+    def _assess_sparseness_homogeneous(self, X):
         X = X.ravel()
         n_zeros = np.sum(X == 0)
-        if n_zeros/len(X) > SPARSE_ZEROS:
+        if n_zeros / len(X) > SPARSE_ZEROS:
             return True
         else:
             return False
 
+    def _assess_sparseness_heterogeneous(self, X):
+        pass
+
+    def is_homogeneous(self):
+        pass
+
+    def is_sparse(self):
+        pass
+
+    def is_binary(self):
+        pass
+
+    def is_counts(self):
+        pass
+
+
+class ColwiseDenseScaler(object):
+    def __init__(self):
+        self.abs_limit = 10
+        self.skip = False
+
+    def set_skip(self):
+        self.skip = True
+
+    def fit(self, X):
+        if self.skip:
+            return
+        self.scaler = RobustScaler()
+        self.scaler.fit(X)
+
+    def transform(self, X):
+        if self.skip:
+            return X
+        X = self.scaler.transform(X)
+        X = np.clip(X, -self.abs_limit, self.abs_limit)
+        return X
+
+
+# TODO
+class ColwiseSparseScaler(object):
+    def __init__(self):
+        pass
+
+    def set_skip(self):
+        self.skip = True
+
+
+# TODO
+class ColwiseNormalizer(object):
+    def __init__(self):
+        pass
+
+
+
+
+class Preprocessing(object):
+    def __init__(self, scale=True):
+        self.scale = scale
+        self.nan_filter = NanFilter()
+        self.imputer = Imputer()
+        self.variance_filter = VarianceFilter()
+
     def fit(self, data):
         self._columns = list(data.columns)
         X = np.array(data)
-        self._is_sparse = self._assess_sparseness(X)
         self.nan_filter.fit(X)
         X = self.nan_filter.transform(X)
         self._columns = [self._columns[i] for i in self.nan_filter.col_idxs]
         self.imputer.fit(X)
         X = self.imputer.transform(X)
-        self.scaler._is_sparse = self._is_sparse
-        self.scaler.fit(X)
-        X = self.scaler.transform(X)
+        if self.scale:
+            self.scaler = RobustScaler()
+            self.scaler.fit(X)
+            X = self.scaler.transform(X)
+        else:
+            self.scaler = None
         self.variance_filter.fit(X)
         X = self.variance_filter.transform(X)
         self._columns = [self._columns[i] for i in self.variance_filter.col_idxs]
@@ -133,6 +164,7 @@ class Preprocessing(object):
         X = np.array(data)
         X = self.nan_filter.transform(X)
         X = self.imputer.transform(X)
-        X = self.scaler.transform(X)
+        if self.scale:
+            X = self.scaler.transform(X)
         X = self.variance_filter.transform(X)
         return pd.DataFrame(X, columns=self._columns)
