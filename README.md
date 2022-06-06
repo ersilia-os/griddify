@@ -61,7 +61,7 @@ cloud_plot(Xc)
 
 ### Rearrange the 2D cloud onto a grid
 
-Distribute cloud points on grid using a [linear assignment](https://github.com/gatagat/lap) algorithm.
+Distribute cloud points on a grid using a [linear assignment](https://github.com/gatagat/lap) algorithm.
 
 ```python
 from griddify import Cloud2Grid
@@ -105,7 +105,7 @@ grid_plot(Xi[0])
 
 ## Full pipeline
 
-You can run the full pipeline described above with only a few lines of code.
+You can run the full pipeline described above in only a few lines of code.
 
 ```python
 from griddify import datasets
@@ -117,6 +117,8 @@ gf = Griddify(preprocess=True)
 gf.fit(data)
 Xi = gf.transform(data)
 ```
+
+You can find more examples as Jupyter Notebooks in the [notebooks](notebooks) folder.
 
 ## Learn more
 

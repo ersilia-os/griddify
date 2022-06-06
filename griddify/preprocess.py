@@ -10,6 +10,45 @@ SPARSE_ZEROS = 0.25
 MAX_DATATYPER_N = 10000
 
 
+class ColumnTyper(object):
+
+    def __init__(self, data):
+        self.data = list(data)
+
+
+class DataTyper(object):
+
+    def __init__(self, data):
+        self.X = np.array(data)[:MAX_DATATYPER_N]
+
+    def _is_two_column_sparse(self):
+        pass
+
+    def _assess_sparseness_homogeneous(self, X):
+        X = X.ravel()
+        n_zeros = np.sum(X == 0)
+        if n_zeros / len(X) > SPARSE_ZEROS:
+            return True
+        else:
+            return False
+
+    def _assess_sparseness_heterogeneous(self, X):
+        pass
+
+    def is_homogeneous(self):
+        pass
+
+    def is_sparse(self):
+        pass
+
+    def is_binary(self):
+        pass
+
+    def is_counts(self):
+        pass
+
+
+
 class NanFilter(object):
     def __init__(self):
         pass
@@ -64,36 +103,6 @@ class VarianceFilter(object):
 
     def transform(self, X):
         return self.sel.transform(X)
-
-
-# TODO
-class DataTyper(object):
-
-    def __init__(self, data):
-        X = np.array(data)[:MAX_DATATYPER_N]
-
-    def _assess_sparseness_homogeneous(self, X):
-        X = X.ravel()
-        n_zeros = np.sum(X == 0)
-        if n_zeros / len(X) > SPARSE_ZEROS:
-            return True
-        else:
-            return False
-
-    def _assess_sparseness_heterogeneous(self, X):
-        pass
-
-    def is_homogeneous(self):
-        pass
-
-    def is_sparse(self):
-        pass
-
-    def is_binary(self):
-        pass
-
-    def is_counts(self):
-        pass
 
 
 class ColwiseDenseScaler(object):

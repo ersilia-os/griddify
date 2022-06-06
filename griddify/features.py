@@ -3,6 +3,8 @@ import pandas as pd
 from scipy.spatial.distance import squareform
 from scipy.spatial.distance import pdist
 
+from tqdm import tqdm
+
 
 class FeatureDistances(object):
     def __init__(self, metric="cosine", max_n=10000, max_subsampling_rounds=5):
@@ -35,7 +37,7 @@ class FeatureDistances(object):
         X = self._transpose(data)
         round_idxs = self._subsample(X)
         D = np.zeros((X.shape[0], X.shape[0], len(round_idxs)))
-        for k, idxs in enumerate(round_idxs):
+        for k, idxs in tqdm(enumerate(round_idxs)):
             X_ = X[:, idxs]
             D_ = squareform(pdist(X_, metric=self.metric))
             D[:, :, k] = D_
