@@ -1,5 +1,4 @@
 import numpy as np
-from tqdm import tqdm
 
 
 class Flat2Grid(object):
@@ -11,7 +10,7 @@ class Flat2Grid(object):
         X = np.array(X)
         Xt_sum = np.zeros((X.shape[0], self._side, self._side))
         Xt_cnt = np.zeros(Xt_sum.shape, dtype=int)
-        for i in tqdm(range(X.shape[0])):
+        for i in range(X.shape[0]):
             x = X[i, :]
             for j, v in enumerate(x):
                 idx_i, idx_j = self._mappings[j]
