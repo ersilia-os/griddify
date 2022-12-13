@@ -3,10 +3,16 @@ Redistribute tabular data into a grid for easy visualization and image-based dee
 
 ## Installation
 
-```
+```bash
 git clone https://github.com/ersilia-os/griddify.git
 cd griddify
 pip install -e .
+```
+
+Note that you may have to install a C++ compiler. You can just use conda for that:
+
+```bash
+conda install -c conda-forge cxx-compiler
 ```
 
 ## Step by step
