@@ -3,4 +3,4 @@ numpy
 pandas
 umap-learn
 scikit-learn
-lap
+lapx
